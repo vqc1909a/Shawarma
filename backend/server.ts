@@ -47,10 +47,11 @@ app.post("/api/files", upload.single("file"), async (req, res) => {
 		// converts the uploaded file's binary data (Buffer) into a readable string using UTF-8 encoding.
 		const csvString = file.buffer.toString("utf-8");
 		// 5. Transform string (csv) to JSON
-		const json = csvToJson.csvStringToJson(csvString);
+    const delimiter = csvString.includes(";") ? ";" : ",";
+		const json = csvToJson.fieldDelimiter(delimiter).csvStringToJson(csvString);
 		// 6. Save the JSON to db (or memory)
 		userData = json;
-	} catch (err) {
+	} catch (err) { 
 		return res
 			.status(400)
 			.json({message: "Error processing the CSV file", error: err.message});

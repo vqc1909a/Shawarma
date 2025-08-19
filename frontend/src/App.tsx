@@ -1,35 +1,83 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {useState, type ChangeEvent, type FormEvent} from "react";
+import "./App.css";
+import {uploadFile} from "./services/uploadFile";
+import {toast, Toaster} from "sonner";
+import { Search } from "./components/Search";
+
+const APP_STATUS = {
+	IDLE: "idle",
+	ERROR: "error",
+	READY_UPLOAD: "ready_upload",
+	UPLOADING: "uploading",
+	READY_USAGE: "ready_usage",
+} as const;
+
+const BUTTON_TEXT = {
+	[APP_STATUS.READY_UPLOAD]: "Listo para subir",
+	[APP_STATUS.UPLOADING]: "Subiendo...",
+} as const;
+
+type APP_STATUS_TYPE = (typeof APP_STATUS)[keyof typeof APP_STATUS];
 
 function App() {
-  const [count, setCount] = useState(0);
+	const [appStatus, setAppStatus] = useState<APP_STATUS_TYPE>(APP_STATUS.IDLE);
+	const [data, setData] = useState<Array<Record<string, string>>>([]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			setAppStatus(APP_STATUS.READY_UPLOAD);
+		}
+	};
+
+	const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const formData = new FormData(e.currentTarget);
+		if (!formData.has("file") || appStatus !== APP_STATUS.READY_UPLOAD) {
+			setAppStatus(APP_STATUS.ERROR);
+			return;
+		}
+		setAppStatus(APP_STATUS.UPLOADING);
+		try {
+			const {message, body} = await uploadFile(formData);
+			setAppStatus(APP_STATUS.READY_USAGE);
+			setData(body);
+			toast.success(message);
+		} catch (err: any) {
+			setAppStatus(APP_STATUS.ERROR);
+			setData([]);
+			toast.error(err.message);
+		}
+	};
+
+	const showButton =
+		appStatus === APP_STATUS.READY_UPLOAD || appStatus === APP_STATUS.UPLOADING;
+	const showInput = appStatus !== APP_STATUS.READY_USAGE;
+	return (
+		<>
+			<h4>Challenge: Upload CSV + Search</h4>
+			<Toaster />
+			{showInput && (
+				<form onSubmit={onFormSubmit}>
+					<label>
+						<input
+							disabled={appStatus === APP_STATUS.UPLOADING}
+							name="file"
+							type="file"
+							accept=".csv"
+							onChange={onInputChange}
+						/>
+					</label>
+					{showButton && (
+						<button type="submit" disabled={appStatus === APP_STATUS.UPLOADING}>
+							{BUTTON_TEXT[appStatus]}
+						</button>
+					)}
+				</form>
+			)}
+			{appStatus === APP_STATUS.READY_USAGE && <Search initialData={data} />}
+		</>
+	);
 }
 
-export default App
+export default App;
