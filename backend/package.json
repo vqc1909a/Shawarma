@@ -1,0 +1,23 @@
+{
+	"name": "backend",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"type": "module",
+	"dependencies": {
+		"convert-csv-to-json": "^3.5.0",
+		"cors": "^2.8.5",
+		"express": "^5.1.0",
+		"multer": "^2.0.2"
+	},
+	"devDependencies": {
+		"@types/node": "^24.3.0",
+		"nodemon": "^3.1.10"
+	},
+	"scripts": {
+		"start": "node --env-file=.env server.ts",
+		"server": "node --watch --env-file=.env.development server.ts",
+		"client": "yarn --cwd frontend dev",
+		"dev": "concurrently \"yarn server\" \"yarn client\""
+	}
+}
