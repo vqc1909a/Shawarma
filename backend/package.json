@@ -22,8 +22,6 @@
 	},
 	"scripts": {
 		"start": "node --env-file=.env server.ts",
-		"server": "node --watch --env-file=.env.development server.ts",
-		"client": "yarn --cwd frontend dev",
-		"dev": "concurrently \"yarn server\" \"yarn client\""
+		"dev": "node --watch --env-file=.env.development server.ts"
 	}
 }

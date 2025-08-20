@@ -34,19 +34,28 @@ export const Search = ({initialData}: SearchProps) => {
 		};
 		fiterDataTrigger();
 	}, [debounceQuery]);
+	console.log({
+		data
+	})
 	return (
 		<div>
 			<Toaster />
 			<h4>Search</h4>
-			<input
-				type="search"
-				placeholder="Search..."
-				value={query}
-				onChange={onInputChange}
-			/>
+			<form>
+				<input
+					type="search"
+					placeholder="Search..."
+					value={query}
+					onChange={onInputChange}
+				/>
+			</form>
 			<ul>
-				{data.map((item, index) => (
-					<li key={index}>{JSON.stringify(item)}</li>
+				{data.map((item) => (
+					<li key={item.id}>
+						<article>
+							{Object.entries(item).map(([key, value]) => (<p><strong>{key}: </strong>{value}</p>))}
+						</article>
+					</li>
 				))}
 			</ul>
 		</div>
