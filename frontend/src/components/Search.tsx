@@ -22,21 +22,25 @@ export const Search = ({initialData}: SearchProps) => {
 	useEffect(() => {
 		window.history.replaceState({}, "", `?q=${encodeURIComponent(debounceQuery)}`);
 		const fiterDataTrigger = async () => {
-			if (debounceQuery) {
+			console.log({
+				debounceQuery,
+				data,
+			});
+			if (debounceQuery.trim()) {
 				try {
-					const {message, body} = await filterData(debounceQuery);
+					const {message, body} = await filterData(encodeURIComponent(debounceQuery.trim()));
 					toast.success(message);
 					setData(body);
 				} catch (err: any) {
           toast.error(err.message);
         }
+			}else{
+				setData(initialData);
 			}
 		};
 		fiterDataTrigger();
+		//eslint-disable-next-line
 	}, [debounceQuery]);
-	console.log({
-		data
-	})
 	return (
 		<div>
 			<Toaster />
@@ -51,9 +55,9 @@ export const Search = ({initialData}: SearchProps) => {
 			</form>
 			<ul>
 				{data.map((item) => (
-					<li key={item.id}>
+					<li key={`${item.Name}`}>
 						<article>
-							{Object.entries(item).map(([key, value]) => (<p><strong>{key}: </strong>{value}</p>))}
+							{Object.entries(item).map(([key, value]) => (<p key={`${key}`}><strong>{key}: </strong>{value}</p>))}
 						</article>
 					</li>
 				))}
