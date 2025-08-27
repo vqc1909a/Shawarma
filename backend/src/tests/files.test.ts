@@ -8,7 +8,7 @@ describe('Tests about files API', () => {
   test("POST /api/files - should upload the file", async () => {
     const response = await request(app)
 			.post("/api/files")
-			.attach("file", path.join(__dirname, "../../demo.csv"))
+			.attach("file", path.join(__dirname, "../../../demo.csv"))
       .expect("Content-Type", /application\/json/i)
 			.expect(200);
 

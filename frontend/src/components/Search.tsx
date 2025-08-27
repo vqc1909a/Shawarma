@@ -1,6 +1,6 @@
 import {useEffect, useState, type ChangeEvent} from "react";
 import {filterData} from "../services/filterData";
-import {toast, Toaster} from "sonner";
+import {toast} from "sonner";
 import { useDebounce } from "@uidotdev/usehooks";
 
 interface SearchProps {
@@ -22,10 +22,6 @@ export const Search = ({initialData}: SearchProps) => {
 	useEffect(() => {
 		window.history.replaceState({}, "", `?q=${encodeURIComponent(debounceQuery)}`);
 		const fiterDataTrigger = async () => {
-			console.log({
-				debounceQuery,
-				data,
-			});
 			if (debounceQuery.trim()) {
 				try {
 					const {message, body} = await filterData(encodeURIComponent(debounceQuery.trim()));
@@ -43,19 +39,19 @@ export const Search = ({initialData}: SearchProps) => {
 	}, [debounceQuery]);
 	return (
 		<div>
-			<Toaster />
 			<h4>Search</h4>
-			<form>
+			<form aria-label="search-form">
 				<input
 					type="search"
 					placeholder="Search..."
 					value={query}
 					onChange={onInputChange}
+					aria-label="search-input"
 				/>
 			</form>
-			<ul>
+			<ul aria-label="list-results">
 				{data.map((item) => (
-					<li key={`${item.Name}`}>
+					<li key={`${item.Name}`} aria-label="list-item">
 						<article>
 							{Object.entries(item).map(([key, value]) => (<p key={`${key}`}><strong>{key}: </strong>{value}</p>))}
 						</article>

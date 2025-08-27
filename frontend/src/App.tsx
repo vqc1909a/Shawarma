@@ -13,8 +13,11 @@ const APP_STATUS = {
 } as const;
 
 const BUTTON_TEXT = {
-	[APP_STATUS.READY_UPLOAD]: "Listo para subir",
-	[APP_STATUS.UPLOADING]: "Subiendo...",
+	[APP_STATUS.IDLE]: "Upload File",
+	[APP_STATUS.ERROR]: "Retry",
+	[APP_STATUS.READY_UPLOAD]: "Ready to Upload",
+	[APP_STATUS.UPLOADING]: "Uploading...",
+	[APP_STATUS.READY_USAGE]: "Ready to Use",
 } as const;
 
 type APP_STATUS_TYPE = (typeof APP_STATUS)[keyof typeof APP_STATUS];
@@ -32,12 +35,18 @@ function App() {
 
 	const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const formData = new FormData(e.currentTarget);
-		if (!formData.has("file") || appStatus !== APP_STATUS.READY_UPLOAD) {
+		const elements = e.currentTarget.elements;
+		const input = elements.namedItem("file") as HTMLInputElement;
+		const file = input.files?.[0];
+
+		if (!file || appStatus !== APP_STATUS.READY_UPLOAD) {
 			setAppStatus(APP_STATUS.ERROR);
 			return;
 		}
 		setAppStatus(APP_STATUS.UPLOADING);
+
+		const formData = new FormData();
+		formData.append("file", file);
 		try {
 			const {message, body} = await uploadFile(formData);
 			setAppStatus(APP_STATUS.READY_USAGE);
@@ -53,12 +62,13 @@ function App() {
 	const showButton =
 		appStatus === APP_STATUS.READY_UPLOAD || appStatus === APP_STATUS.UPLOADING;
 	const showInput = appStatus !== APP_STATUS.READY_USAGE;
+	
 	return (
 		<>
-			<h4>Challenge: Upload CSV + Search</h4>
+			<h1>Upload CSV + Search</h1>
 			<Toaster />
 			{showInput && (
-				<form onSubmit={onFormSubmit}>
+				<form onSubmit={onFormSubmit} aria-label="upload-form">
 					<label>
 						<input
 							disabled={appStatus === APP_STATUS.UPLOADING}
@@ -66,10 +76,11 @@ function App() {
 							type="file"
 							accept=".csv"
 							onChange={onInputChange}
+							aria-label="file-input"
 						/>
 					</label>
 					{showButton && (
-						<button type="submit" disabled={appStatus === APP_STATUS.UPLOADING}>
+						<button type="submit" disabled={appStatus === APP_STATUS.UPLOADING} aria-label="upload-file">
 							{BUTTON_TEXT[appStatus]}
 						</button>
 					)}

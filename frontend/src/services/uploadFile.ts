@@ -5,12 +5,13 @@ interface UploadFileResponse {
   body: Array<Record<string, string>>
 } 
 export const uploadFile = async (form: FormData): Promise<UploadFileResponse> => {
-	const response = await fetch(`${BACKEND_URL}/api/files`, {
+	const response = await fetch(`${BACKEND_URL}/files`, {
 		method: "POST",
 		body: form,
 	});
 	if (!response.ok) {
-		throw new Error("Failed to upload file");
+		const errorText = await response.text();
+		throw new Error(errorText || "Failed to upload file");
 	}
 	return response.json();
 };
