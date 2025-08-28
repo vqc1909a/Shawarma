@@ -85,7 +85,7 @@ export const handlers = [
     //   [Symbol(buffer)]: <Buffer 4e 61 6d 65 3b 45 6d 61 69 6c 3b 41 67 65 3b 43 6f 75 6e 74 72 79 3b 4f 63 63 75 70 61 74 69 6f 6e 0a 41 6c 69 63 65 3b 61 6c 69 63 65 40 65 78 61 6d ... 406 more bytes>
     // }
 		if (!file) {
-			return HttpResponse.json({message: "File is required"}, {status: 500});
+			return HttpResponse.json({message: "File is required"}, {status: 400});
 		}
 
 	  if (!(file instanceof File) || file.type !== "text/csv") {

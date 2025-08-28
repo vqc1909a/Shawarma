@@ -19,7 +19,7 @@ export const postFile = async (req, res) => {
 
 	// 2. Validate that we have file
 	if (!file) {
-		return res.status(500).json({message: "File is required"});
+		return res.status(400).json({message: "File is required"});
 	}
 	// 3. Validate the mimetype (csv)
 	if (file.mimetype !== "text/csv") {
