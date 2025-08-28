@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "cors";
+// import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
 import {filesRouter} from "./src/routes/filesRoute.ts";
@@ -10,7 +10,9 @@ const PORT = process.env.PORT || 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors());
+
+//YOU HAVE TO ENABLE THIS IF YOU WANT TO GET UP YOU  FRONTEND TEST ENVIRONMENT POINTING TO THE BACKEND PORT (4000) AND NOT USING MSW
+// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 

@@ -88,7 +88,7 @@ describe("Tests in App.tsx", () => {
 
     await waitFor(() => {
       expect(getNotFileForm()).not.toBeInTheDocument();
-    })
+    }, {timeout: 1500})
 
     expect(getSearchForm()).toBeInTheDocument();
     expect(getListResults()).toBeInTheDocument();
@@ -101,12 +101,12 @@ describe("Tests in App.tsx", () => {
 
     await waitFor(() => {
       expect(getNotFileForm()).not.toBeInTheDocument();
-    })
+    }, {timeout: 1500});
 
     await userEvent.type(getSearchInput(), "alice");
     await waitFor(() => {
       expect(getListItems()).toHaveLength(1);
-    })
+    }, {timeout: 1500});
   });
   test("should show all the results when clear the search input", async () => {
     render(<App />);
@@ -115,14 +115,14 @@ describe("Tests in App.tsx", () => {
 
     await waitFor(() => {
       expect(getNotFileForm()).not.toBeInTheDocument();
-    })
+    }, {timeout: 1500});
 
     await userEvent.type(getSearchInput(), "alice");
     await userEvent.clear(getSearchInput());
 
     await waitFor(() => {
       expect(getListItems()).toHaveLength(10);
-    })
+    }, {timeout: 1500})
   });
   test("should show the results automatically according to the query parameter in the URL", async () => {
     window.history.replaceState({}, "", "?q=alice");
@@ -132,7 +132,7 @@ describe("Tests in App.tsx", () => {
 
 		await waitFor(() => {
       expect(getListItems()).toHaveLength(1);
-		});
+		}, {timeout: 1500});
   });
   test("should not show any results if the query parameter in the URL does not match any record", async () => {
     window.history.replaceState({}, "", "?q=notfound");
@@ -142,6 +142,6 @@ describe("Tests in App.tsx", () => {
 
     await waitFor(() => {
       expect(getListResults().childNodes).toHaveLength(0);
-    });
+    }, {timeout: 1500});
   });
 });

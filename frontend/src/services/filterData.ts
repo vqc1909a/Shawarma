@@ -5,7 +5,7 @@ interface FilterDataResponse {
   body: Array<Record<string, string>>
 } 
 export const filterData = async (query: string): Promise<FilterDataResponse> => {
-	const response = await fetch(`${BACKEND_URL}/files?q=${query}`);
+	const response = await fetch(`${BACKEND_URL}/api/files?q=${query}`);
 	if (!response.ok) {
 		throw new Error("Failed to filter data");
 	}
