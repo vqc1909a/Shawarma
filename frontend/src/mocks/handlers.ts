@@ -75,7 +75,7 @@ const userData: Array<Record<string, string>> = [
 
 export const handlers = [
 	http.post(`${BACKEND_URL}/api/files`, async ({request}) => {
-    await delay(500);
+    await delay(300);
 		const formData = await request.formData();
 		const file = formData.get("file");
     // File {
@@ -101,7 +101,7 @@ export const handlers = [
 		);
 	}),
 	http.get(`${BACKEND_URL}/api/files`, async ({request}) => {
-    await delay(500);
+    await delay(300);
 
 		const url = new URL(request.url);
     const query = url.searchParams.get("q");

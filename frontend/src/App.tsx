@@ -2,7 +2,8 @@ import {useState, type ChangeEvent, type FormEvent} from "react";
 import "./App.css";
 import {uploadFile} from "./services/uploadFile";
 import {toast, Toaster} from "sonner";
-import { Search } from "./components/Search";
+import {Search} from "./components/Search";
+import { useSEO } from "./hooks/useSeo";
 
 const APP_STATUS = {
 	IDLE: "idle",
@@ -23,6 +24,11 @@ const BUTTON_TEXT = {
 type APP_STATUS_TYPE = (typeof APP_STATUS)[keyof typeof APP_STATUS];
 
 function App() {
+	useSEO({
+		title: "Uploading CSV App",
+		description: "A simple app for uploading and processing CSV files",
+	});
+	
 	const [appStatus, setAppStatus] = useState<APP_STATUS_TYPE>(APP_STATUS.IDLE);
 	const [data, setData] = useState<Array<Record<string, string>>>([]);
 
@@ -40,6 +46,7 @@ function App() {
 		const file = input.files?.[0];
 
 		if (!file || appStatus !== APP_STATUS.READY_UPLOAD) {
+			toast.error("Please select a valid CSV.");
 			setAppStatus(APP_STATUS.ERROR);
 			return;
 		}
@@ -60,9 +67,9 @@ function App() {
 	};
 
 	const showButton =
-		appStatus === APP_STATUS.READY_UPLOAD || appStatus === APP_STATUS.UPLOADING;
+		appStatus !== APP_STATUS.READY_USAGE && appStatus !== APP_STATUS.IDLE;
 	const showInput = appStatus !== APP_STATUS.READY_USAGE;
-	
+
 	return (
 		<>
 			<h1>Upload CSV + Search</h1>
@@ -80,7 +87,11 @@ function App() {
 						/>
 					</label>
 					{showButton && (
-						<button type="submit" disabled={appStatus === APP_STATUS.UPLOADING} aria-label="upload-file">
+						<button
+							type="submit"
+							disabled={appStatus === APP_STATUS.UPLOADING}
+							aria-label="upload-file"
+						>
 							{BUTTON_TEXT[appStatus]}
 						</button>
 					)}

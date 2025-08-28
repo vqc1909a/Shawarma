@@ -3,6 +3,8 @@ import express from "express";
 import { fileURLToPath } from "url";
 import path from "path";
 import {filesRouter} from "./src/routes/filesRoute.ts";
+import { notFoundMiddleware } from "./src/middlewares/notFoundMiddleware.ts";
+import { errorMiddleware } from "./src/middlewares/errorMiddleware.ts";
 
 export const app = express();
 const PORT = process.env.PORT || 4000;
@@ -28,6 +30,10 @@ if (process.env.NODE_ENV === "production") {
 		return res.send("Hello, World!");
 	});
 }
+
+app.use(notFoundMiddleware);
+app.use(errorMiddleware);
+
 
 app.listen(PORT, () => {
 	console.log(`API is running on http://localhost:${PORT}`);

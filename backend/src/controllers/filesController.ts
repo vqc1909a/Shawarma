@@ -1,8 +1,9 @@
 import csvToJson from "convert-csv-to-json";
+import {asyncHandler} from "../middlewares/asyncHandler.ts";
 
 let userData: Array<Record<string, string>> = [];
 
-export const postFile = async (req, res) => {
+export const postFile = asyncHandler(async (req, res) => {
 	// 1. Extract file from request
 	const file = req.file;
 	// {
@@ -25,41 +26,37 @@ export const postFile = async (req, res) => {
 	if (file.mimetype !== "text/csv") {
 		return res.status(400).json({message: "File must be a CSV"});
 	}
-	try {
-		// 4. Transform the file (Buffer) to string
-		// converts the uploaded file's binary data (Buffer) into a readable string using UTF-8 encoding.
-		const csvString = file.buffer.toString("utf-8");
-		// 5. Transform string (csv) to JSON
-		const delimiter = csvString.includes(";") ? ";" : ",";
-		const json = csvToJson.fieldDelimiter(delimiter).csvStringToJson(csvString);
-		// 6. Save the JSON to db (or memory)
-		userData = json;
-	} catch (err) {
-		return res
-			.status(400)
-			.json({message: "Error processing the CSV file", error: err.message});
-	}
+	// 4. Transform the file (Buffer) to string
+	// converts the uploaded file's binary data (Buffer) into a readable string using UTF-8 encoding.
+	const csvString = file.buffer.toString("utf-8");
+	// 5. Transform string (csv) to JSON
+	const delimiter = csvString.includes(";") ? ";" : ",";
+	const json = csvToJson.fieldDelimiter(delimiter).csvStringToJson(csvString);
+	// 6. Save the JSON to db (or memory)
+	userData = json;
 
 	// 7. Return 200 with the message and the JSON
 	return res
 		.status(200)
 		.json({message: "The file was uploaded successfully", body: userData});
-};
+});
 
-
-export const getFilesData = async (req, res) => {
+export const getFilesData = asyncHandler(async (req, res) => {
 	// 1. Extract the query params 'q' from the request
-  const query: string = req.query.q;
+	const query: string = req.query.q;
 	// 2. Validate that we have query query
-  if(!query){
-    return res.status(400).json({message: "Query param 'q' is required"});
-  }
+	if (!query) {
+		return res.status(400).json({message: "Query param 'q' is required"});
+	}
 	// 3. Filter the data from the db (or memory) with the query params
-  const filteredData = userData.filter(row => {
-    return Object.values(row).some((value) => value.includes(query.toLowerCase()));
-  });
+	const filteredData = userData.filter((row) => {
+		return Object.values(row).some((value) =>
+			value.includes(query.toLowerCase())
+		);
+	});
 
 	// 4. Return 200 with the filtered data
-	return res.status(200).json({message: "Data retrieved successfully", body: filteredData});
-};
-
+	return res
+		.status(200)
+		.json({message: "Data retrieved successfully", body: filteredData});
+});

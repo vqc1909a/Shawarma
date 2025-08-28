@@ -28,6 +28,7 @@ export const Search = ({initialData}: SearchProps) => {
 					toast.success(message);
 					setData(body);
 				} catch (err: any) {
+					setData([]);
           toast.error(err.message);
         }
 			}else{

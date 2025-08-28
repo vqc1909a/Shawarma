@@ -7,7 +7,8 @@ interface FilterDataResponse {
 export const filterData = async (query: string): Promise<FilterDataResponse> => {
 	const response = await fetch(`${BACKEND_URL}/api/files?q=${query}`);
 	if (!response.ok) {
-		throw new Error("Failed to filter data");
+		const error = await response.json();
+		throw new Error(error?.message || "Failed to filter data");
 	}
 	return response.json();
 };
