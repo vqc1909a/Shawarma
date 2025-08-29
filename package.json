@@ -12,6 +12,7 @@
 		"test:backend": "yarn workspace backend test:coverage",
 		"test:frontend": "yarn workspace frontend test:coverage",
 		"dev": "yarn workspace backend dev & yarn workspace frontend dev",
+		"build:local": "yarn workspace frontend build & yarn workspace backend start:local",
 		"build": "yarn workspace frontend build & yarn workspace backend start"
 	}
 }

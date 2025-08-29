@@ -23,7 +23,8 @@
 		"vitest": "^3.2.4"
 	},
 	"scripts": {
-		"start": "node --env-file=.env server.ts",
+		"start:local": "node --env-file=.env server.ts",
+		"start": "node server.ts",
 		"dev": "node --watch --env-file=.env.development server.ts",
 		"test": "vitest",
 		"test:coverage": "vitest --coverage"
