@@ -72,10 +72,11 @@ const userData: Array<Record<string, string>> = [
 		Occupation: "Writer",
 	},
 ];
-
 export const handlers = [
 	http.post(`${BACKEND_URL}/api/files`, async ({request}) => {
     await delay(300);
+		// const {slug} = params;
+		// const data = await request.json();
 		const formData = await request.formData();
 		const file = formData.get("file");
     // File {
@@ -102,7 +103,6 @@ export const handlers = [
 	}),
 	http.get(`${BACKEND_URL}/api/files`, async ({request}) => {
     await delay(300);
-
 		const url = new URL(request.url);
     const query = url.searchParams.get("q");
     if(!query){
