@@ -20,6 +20,11 @@ app.use(express.urlencoded({extended: true}));
 
 app.use("/api/files", filesRouter);
 
+console.log({
+	allenvs: process.env,
+	app_env: process.env.APP_ENV,
+	node_env: process.env.NODE_ENV
+})
 if (process.env.APP_ENV === "production") {
 	app.use(express.static(path.join(__dirname, "../frontend/dist")));
 	app.get("/", function (req, res) {
