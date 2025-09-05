@@ -10,3 +10,10 @@ filesRouter.post("/", upload.single("file"), postFile);
 
 filesRouter.get("/", getFilesData);
 
+// In your route, use multer.fields to specify multiple file fields
+// upload.fields([{ name: 'file', maxCount: 1 }, { name: 'image', maxCount: 1 }])
+
+// In your handler:
+// const file = req.files['file']?.[0];   // The uploaded file for 'file'
+// const image = req.files['image']?.[0]; // The uploaded file for 'image'
+
