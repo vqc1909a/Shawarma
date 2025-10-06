@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'backend/**'  # Change to backend directory
-      - '.github/workflows/ci.yml'
+      - '.github/workflows/ci.backend.yml'
   pull_request:
     branches: [ main ]
     paths:
@@ -36,7 +36,7 @@ jobs:
           cd backend  # Change to backend directory
           yarn test -- --run  # Adjust if using a different test command
 
-      - name: Build backend project
+      - name: Start backend server
         run: |
           cd backend  # Change to backend directory
-          yarn start  # Adjust if using a different build command
+          yarn start  # Adjust if using a different start command
