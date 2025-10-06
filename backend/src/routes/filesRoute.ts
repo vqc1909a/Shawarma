@@ -7,7 +7,6 @@ const upload = multer({storage: storage});
 export const filesRouter = express.Router();
 
 filesRouter.post("/", upload.single("file"), postFile);
-
 filesRouter.get("/", getFilesData);
 
 // In your route, use multer.fields to specify multiple file fields
