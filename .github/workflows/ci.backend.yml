@@ -35,8 +35,3 @@ jobs:
         run: |
           cd backend  # Change to backend directory
           yarn test -- --run  # Adjust if using a different test command
-
-      - name: Start backend server
-        run: |
-          cd backend  # Change to backend directory
-          yarn start  # Adjust if using a different start command
