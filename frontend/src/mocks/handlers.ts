@@ -101,6 +101,7 @@ export const handlers = [
 			{status: 200}
 		);
 	}),
+	
 	http.get(`${BACKEND_URL}/api/files`, async ({request}) => {
     await delay(300);
 		const url = new URL(request.url);
