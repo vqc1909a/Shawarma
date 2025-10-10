@@ -1,4 +1,4 @@
-name: CI - Test and Build for Frontend and Backend
+name: CI - Test and Build for Production
 
 on:
   push:
